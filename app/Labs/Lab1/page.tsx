@@ -53,15 +53,15 @@ export default function Lab1() {
                 <ul id="wd-my-books">
                     <li>Dune</li>
                     <li>Lord of the Rings</li>
-                    <li>Ender's Game</li>
+                    <li>Ender&#39;s Game</li>
                     <li>Red Mars</li>
                     <li>The Forever War</li>
                 </ul>
                 Your favorite books (in no particular order)
                 <ul id="wd-your-books">
                     <li>Harry Potter</li>
-                    <li>A Sloth's Guide to Mindfulness</li>
-                    <li>Every Man's Battle</li>
+                    <li>A Sloth&#39;s Guide to Mindfulness</li>
+                    <li>Every Man&#39;s Battle</li>
                 </ul>
             </div>
             <div id="wd-tables">
