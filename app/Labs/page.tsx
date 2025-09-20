@@ -17,7 +17,7 @@ export default function Labs() {
            Lab 3: JavaScript Fundamentals </Link>
        </li>
        <li>
-        https://github.com/Josh-Len/kambaz-next-js/tree/main/app
+        https://github.com/Josh-Len/kambaz-next-js
        </li>
      </ul>
      <ol>
