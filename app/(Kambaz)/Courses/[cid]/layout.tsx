@@ -1,16 +1,15 @@
-// app/Kambaz/Courses/[cid]/layout.tsx
 import React from "react";
 import { FaAlignJustify } from "react-icons/fa";
 import CourseNavigation from "./Navigation";
 
-export default function Layout({
+export default async function Layout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { cid: string };
+  params: Promise<{ cid: string }>;
 }) {
-  const { cid } = params;
+  const { cid } = await params;
 
   return (
     <div id="wd-courses">
