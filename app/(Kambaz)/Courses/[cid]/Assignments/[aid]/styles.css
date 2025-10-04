@@ -1,0 +1,101 @@
+.ae-card {
+  max-width: 720px;
+  margin: 16px;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.ae-title {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+}
+
+.ae-field {
+  display: flex;
+  flex-direction: column;
+  margin: 12px 0;
+}
+
+label,
+.ae-label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  padding: 10px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.ae-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.ae-checks {
+  display: grid;
+  gap: 6px;
+}
+
+.ae-checks label {
+  font-weight: 400;
+}
+
+.ae-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.ae-btn {
+  border: 1px solid #d0d7de;
+  background: #f6f8fa;
+  color: #24292f;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ae-btn:hover {
+  background: #eef1f4;
+}
+
+.ae-btn-primary {
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.ae-btn-primary:hover {
+  background: #0b5ed7;
+}
+
+@media (max-width: 480px) {
+  .ae-card {
+    margin: 12px;
+    padding: 14px;
+  }
+}
