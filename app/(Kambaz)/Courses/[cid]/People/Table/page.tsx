@@ -5,14 +5,27 @@ import { FaUserCircle } from "react-icons/fa";
 import { useParams } from "next/navigation";
 import * as db from "../../../../Database";
 
+// Tiny local types (replace with real ones from your DB if available)
+type Enrollment = { user: string; course: string };
+type User = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  loginId: string;
+  section: string;
+  role: string;
+  lastActivity: string;
+  totalActivity: string;
+};
+
 export default function PeopleTable() {
   const { cid } = useParams<{ cid: string }>();
-  const { users, enrollments } = db;
 
-  const enrolledUsers = users.filter((usr: any) =>
-    enrollments.some(
-      (enr: any) => enr.user === usr._id && enr.course === cid
-    )
+  const users = db.users as User[];
+  const enrollments = db.enrollments as Enrollment[];
+
+  const enrolledUsers: User[] = users.filter((usr) =>
+    enrollments.some((enr) => enr.user === usr._id && enr.course === cid)
   );
 
   return (
@@ -29,7 +42,7 @@ export default function PeopleTable() {
           </tr>
         </thead>
         <tbody>
-          {enrolledUsers.map((user: any) => (
+          {enrolledUsers.map((user) => (
             <tr key={user._id}>
               <td className="wd-full-name text-nowrap">
                 <FaUserCircle className="me-2 fs-1 text-secondary" />

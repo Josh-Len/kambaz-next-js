@@ -9,9 +9,13 @@ import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
 
+// ✅ Minimal local types
+type Lesson = { _id?: string; name: string };
+type Module = { _id?: string; name: string; course: string; lessons?: Lesson[] };
+
 export default function Modules() {
   const { cid } = useParams<{ cid: string }>();
-  const modules = db.modules;
+  const modules = db.modules as Module[]; // narrow the db type
 
   return (
     <div>
@@ -29,8 +33,8 @@ export default function Modules() {
 
       <ListGroup id="wd-modules" className="rounded-0">
         {modules
-          .filter((module: any) => module.course === cid)
-          .map((module: any) => (
+          .filter((module: Module) => module.course === cid)
+          .map((module: Module) => (
             <ListGroup.Item
               key={module._id ?? module.name}
               className="wd-module p-0 mb-5 fs-5 border-gray"
@@ -42,7 +46,7 @@ export default function Modules() {
 
               {module.lessons && (
                 <ListGroup className="wd-lessons rounded-0">
-                  {module.lessons.map((lesson: any) => (
+                  {module.lessons.map((lesson: Lesson) => (
                     <ListGroup.Item
                       key={lesson._id ?? lesson.name}
                       className="wd-lesson p-3 ps-1"
