@@ -1,12 +1,13 @@
 export default function BooleanVariables() {
 const numberVariable = 123
-let floatingPointNumber = 234.345;
+const floatingPointNumber = 234.345;
 const true1 = true, false1 = false;
 const false2 = true1 && false1;
 const true2 = true1 || false1;
 const true3 = !false2;
 const true4 = numberVariable === 123; // always use === not ==
-const true5 = floatingPointNumber !== 321.432;
+//const true5 = floatingPointNumber !== 321.432;
+//true5     = {true5 + ""}     <br /> taken out from line21
 const false3 = numberVariable < 100;
 return (
   <div id="wd-boolean-variables">
@@ -17,7 +18,6 @@ return (
     true2     = {true2 + ""}     <br />
     true3     = {true3 + ""}     <br />
     true4     = {true4 + ""}     <br />
-    true5     = {true5 + ""}     <br />
     false3    = {false3 + ""}    <hr />
   </div>
 );}
