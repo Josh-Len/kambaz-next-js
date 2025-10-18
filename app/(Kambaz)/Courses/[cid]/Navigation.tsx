@@ -1,16 +1,29 @@
+"use client";
 import Link from "next/link";
+import { useParams, usePathname } from "next/navigation";
 export default function CourseNavigation() {
-  return (
-    <div id="wd-courses-navigation">
-      <Link href="/Courses/1234/Home" className="list-group-item text-danger border-0">Home</Link>
-      <Link href="/Courses/1234/Modules" className="list-group-item text-danger border-0">Modules
-        </Link>
-      <Link href="/Courses/1234/Piazza" className="list-group-item text-danger border-0">Piazza</Link>
-      <Link href="/Courses/1234/Zoom" className="list-group-item text-danger border-0">Zoom</Link>
-      <Link href="/Courses/1234/Assignments" className="list-group-item text-danger border-0">
-          Assignments</Link>
-      <Link href="/Courses/1234/Quizzes" className="list-group-item text-danger border-0">Quizzes</Link>
-      <Link href="/Courses/1234/Grades" className="list-group-item text-danger border-0">Grades</Link>
-      <Link href="/Courses/1234/People/Table" className="list-group-item text-danger border-0">People</Link>
-    </div>
-  );}
+ const { cid } = useParams();
+ const pathname = usePathname();
+ const links = [
+   { href: "Home",         label: "Home"        },
+   { href: "Modules",      label: "Modules"     },
+   { href: "Piazza",       label: "Piazza"      },
+   { href: "Zoom",         label: "Zoom"        },
+   { href: "Assignments",  label: "Assignments" },
+   { href: "Quizzes",      label: "Quizzes"     },
+   { href: "Grades",       label: "Grades"      },
+   { href: "People/Table", label: "People"      },
+ ];
+return (
+   <div className="rounded-0 border-0 list-group">
+     {links.map(({ href, label }) => (
+       <Link key={href}
+         className={`list-group-item ${
+           pathname.endsWith(href) ?
+           "active" : "text-danger border-0" }`}
+         href={`/Courses/${cid}/${href}`} >
+         {label} </Link>
+     ))}
+   </div>
+ );
+}
