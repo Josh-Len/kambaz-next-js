@@ -1,12 +1,49 @@
-import "./styles.css"
+"use client";
+
+import "./styles.css";
+import { useParams } from "next/navigation";
+import * as db from "../../../../Database"; // adjust the path if needed
+
+type Assignment = {
+  _id: string;
+  title: string;
+  course: string;
+  description?: string;
+  points?: number;
+  availableAt?: string; // ISO or human-readable
+  dueAt?: string;       // ISO or human-readable
+  untilAt?: string;     // optional (if you add it later)
+};
+
+const toInputDate = (d?: string) => {
+  if (!d) return "";
+  const dt = new Date(d);
+  return isNaN(dt.valueOf()) ? "" : dt.toISOString().slice(0, 10); // YYYY-MM-DD
+};
+
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams<{ cid: string; aid: string }>();
+
+  const assignment = (db.assignments as Assignment[]).find(
+    (a) => a._id === aid && a.course === cid
+  );
+
+  if (!assignment) {
+    return (
+      <div id="wd-assignments-editor" className="ae-card">
+        <h2 className="ae-title">Edit Assignment</h2>
+        <p className="text-muted">Assignment not found.</p>
+      </div>
+    );
+  }
+
   return (
     <div id="wd-assignments-editor" className="ae-card">
       <h2 className="ae-title">Edit Assignment</h2>
 
       <div className="ae-field">
         <label htmlFor="wd-name">Assignment Name</label>
-        <input id="wd-name" defaultValue="A1 - ENV + HTML" />
+        <input id="wd-name" defaultValue={assignment.title} />
       </div>
 
       <div className="ae-field">
@@ -14,13 +51,17 @@ export default function AssignmentEditor() {
         <textarea
           id="wd-description"
           rows={4}
-          defaultValue="The assignment is available online. Submit a link to the landing page of"
+          defaultValue={assignment.description ?? ""}
         />
       </div>
 
       <div className="ae-field">
         <label htmlFor="wd-points">Points</label>
-        <input id="wd-points" type="number" defaultValue={100} />
+        <input
+          id="wd-points"
+          type="number"
+          defaultValue={assignment.points ?? 100}
+        />
       </div>
 
       <div className="ae-row">
@@ -65,15 +106,27 @@ export default function AssignmentEditor() {
       <div className="ae-row">
         <div className="ae-field">
           <label htmlFor="wd-text-fields-due">Due</label>
-          <input type="date" defaultValue="2024-05-13" id="wd-text-fields-due" />
+          <input
+            type="date"
+            id="wd-text-fields-due"
+            defaultValue={toInputDate(assignment.dueAt)}
+          />
         </div>
         <div className="ae-field">
           <label htmlFor="wd-available-from">Available From</label>
-          <input type="date" id="wd-available-from" defaultValue="2024-05-06" />
+          <input
+            type="date"
+            id="wd-available-from"
+            defaultValue={toInputDate(assignment.availableAt)}
+          />
         </div>
         <div className="ae-field">
           <label htmlFor="wd-available-until">Until</label>
-          <input type="date" id="wd-available-until" defaultValue="2024-05-20" />
+          <input
+            type="date"
+            id="wd-available-until"
+            defaultValue={toInputDate(assignment.dueAt)}
+          />
         </div>
       </div>
 

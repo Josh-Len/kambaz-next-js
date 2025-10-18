@@ -9,13 +9,12 @@ import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
 
-// ✅ Minimal local types
 type Lesson = { _id?: string; name: string };
 type Module = { _id?: string; name: string; course: string; lessons?: Lesson[] };
 
 export default function Modules() {
   const { cid } = useParams<{ cid: string }>();
-  const modules = db.modules as Module[]; // narrow the db type
+  const modules = db.modules as Module[];
 
   return (
     <div>
