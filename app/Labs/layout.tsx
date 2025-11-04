@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import TOC from "./TOC";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 
 export default function LabsLayout({
@@ -9,11 +10,11 @@ export default function LabsLayout({
    <table>
      <tbody>
        <tr>
-         <td valign="top" width="100px">
+         <td colSpan={2} style={{ paddingBottom: 12 }}>
            <TOC />
          </td>
-         <td valign="top">{children}</td>
        </tr>
+       <td valign="top">{children}</td>
      </tbody>
    </table>
 );}
