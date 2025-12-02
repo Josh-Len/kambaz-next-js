@@ -3,7 +3,7 @@
 import Table from "react-bootstrap/Table";
 import { FaUserCircle } from "react-icons/fa";
 import { useParams } from "next/navigation";
-import * as db from "../../../../Database";
+import db from "../../../../Database";
 
 // Tiny local types (replace with real ones from your DB if available)
 type Enrollment = { user: string; course: string };
