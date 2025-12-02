@@ -10,7 +10,7 @@ export default function KambazNavigation() {
  const links = [
    { href: "/Account",   label: "Account",   icon: FaRegUserCircle },
    { href: "/Dashboard", label: "Dashboard", icon: MdSpaceDashboard },
-   { href: "/Dashboard", label: "Courses",   icon: FaBookDead },
+   { href: "/Courses", label: "Courses",   icon: FaBookDead },
    { href: "/Calendar",  label: "Calendar",  icon: FaCalendarAlt },
    { href: "/Inbox",     label: "Inbox",     icon: FaRegUserCircle },
    { href: "/Labs",      label: "Labs",      icon: CiBeaker1 },

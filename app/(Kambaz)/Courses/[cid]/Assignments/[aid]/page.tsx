@@ -5,11 +5,12 @@ import React, { useState } from "react";
 import "./styles.css";
 import { useParams, useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { addAssignment, updateAssignment } from "../reducer"; // adjust path if needed
+import { addAssignment, updateAssignment } from "../reducer";
 import { RootState } from "../../../../store";
+import * as client from "../../../client";
 
 type Assignment = {
-  _id: string;
+  _id?: string;
   title: string;
   course: string;
   description?: string;
@@ -31,7 +32,6 @@ export default function AssignmentEditor() {
 
   const isNew = aid === "new";
 
-  // Match Dashboard style: pull from reducer via RootState
   const { assignments } = useSelector(
     (state: RootState) => state.assignmentsReducer
   );
@@ -42,7 +42,6 @@ export default function AssignmentEditor() {
 
   const notFound = !isNew && !existing;
 
-  // All hooks at top level (no early return!)
   const [title, setTitle] = useState(existing?.title ?? "");
   const [description, setDescription] = useState(existing?.description ?? "");
   const [points, setPoints] = useState<number>(existing?.points ?? 100);
@@ -55,7 +54,7 @@ export default function AssignmentEditor() {
     router.push(`/Courses/${cid}/Assignments`);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const base: Omit<Assignment, "_id"> = {
       course: cid,
       title,
@@ -66,13 +65,17 @@ export default function AssignmentEditor() {
     };
 
     if (isNew) {
-      // _id generated in the assignments reducer via uuid
-      dispatch(addAssignment(base as any));
+      const created = await client.createAssignmentForCourse(cid, base);
+      dispatch(addAssignment(created as any));
+      router.push(`/Courses/${cid}/Assignments`);
     } else if (existing) {
-      dispatch(updateAssignment({ ...base, _id: existing._id } as any));
+      const updated = await client.updateAssignment({
+        ...base,
+        _id: existing._id,
+      });
+      dispatch(updateAssignment(updated as any));
+      router.push(`/Courses/${cid}/Assignments`);
     }
-
-    router.push(`/Courses/${cid}/Assignments`);
   };
 
   return (

@@ -6,21 +6,36 @@ import { useParams } from "next/navigation";
 import ListGroup from "react-bootstrap/ListGroup";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store";
-import { deleteAssignment } from "./reducer"; // 🔥 make sure this path is right
+import { deleteAssignment, setAssignments } from "./reducer"; // 🔥 make sure this path is right
+import { useEffect } from "react";
+import * as client from "../../client";
 
 export default function Assignments() {
   const { cid } = useParams<{ cid: string }>();
   const dispatch = useDispatch();
 
+    const fetchAssignments = async () => {
+    const assignments = await client.findAssignmentsForCourse(cid as string);
+    dispatch(setAssignments(assignments));
+  };
+  useEffect(() => {
+    fetchAssignments();
+  }, []);
+
+  const onRemoveAssignment = async (assignmentId: string) => {
+    await client.deleteAssignment(assignmentId);
+    dispatch(setAssignments(assignments.filter((a: any) => a._id !== assignmentId)));
+  };
+
+
+
   const { assignments } = useSelector(
     (state: RootState) => state.assignmentsReducer
   );
 
-  // Only assignments for this course
   const courseAssignments = assignments.filter((a: any) => a.course === cid);
 
   const handleDelete = (event: React.MouseEvent, assignmentId: string) => {
-    // Prevent the row click from navigating
     event.preventDefault();
     event.stopPropagation();
 
@@ -29,7 +44,7 @@ export default function Assignments() {
     );
     if (!ok) return;
 
-    dispatch(deleteAssignment(assignmentId));
+    onRemoveAssignment(assignmentId);
   };
 
   return (
@@ -69,7 +84,6 @@ export default function Assignments() {
               className="wd-assignment-list-item text-decoration-none text-reset"
             >
               <div className="d-flex justify-content-between align-items-start">
-                {/* Left: assignment text */}
                 <div>
                   <div className="fw-semibold text-primary">{a.title}</div>
                   <div className="wd-assignment-meta text-muted">
@@ -81,14 +95,12 @@ export default function Assignments() {
                   </div>
                 </div>
 
-                {/* Right: Delete button */}
                 <button
                   type="button"
                   id="wd-delete-assignment-click"
                   className="btn btn-danger btn-sm ms-2"
                   onClick={(e) => handleDelete(e, a._id)}
                 >
-                  {/* If you have Bootstrap Icons: <i className="bi bi-trash" /> */}
                   Delete
                 </button>
               </div>

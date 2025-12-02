@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import * as db from "../Database"; // adjust path if needed
+import db from "../Database";
 
 export type Enrollment = {
   _id: string;
@@ -13,7 +13,6 @@ type EnrollmentsState = {
 };
 
 const initialState: EnrollmentsState = {
-  // Seed from Database on first load – lost on refresh
   enrollments: db.enrollments as any,
 };
 
