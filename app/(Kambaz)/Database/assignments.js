@@ -1,4 +1,5 @@
-[
+// eslint-disable-next-line import/no-anonymous-default-export
+export default [
   {
     "_id": "A101",
     "title": "Propulsion Assignment",

@@ -8,7 +8,7 @@ const initialState = {
 const coursesSlice = createSlice({
  name: "courses",
  initialState,
-reducers: {
+ reducers: {
    addNewCourse: (state, { payload: course }) => {
      const newCourse = { ...course, _id: uuidv4() };
      state.courses = [...state.courses, newCourse] as any;
@@ -18,13 +18,17 @@ reducers: {
        (course: any) => course._id !== courseId
      );
    },
- updateCourse: (state, { payload: course }) => {
+   updateCourse: (state, { payload: course }) => {
      state.courses = state.courses.map((c: any) =>
        c._id === course._id ? course : c
      ) as any;
    },
+   setCourses: (state, { payload: courses }) => {
+     state.courses = courses;
+   },
  },
 });
-export const { addNewCourse, deleteCourse, updateCourse } =
+export const { addNewCourse, deleteCourse, updateCourse, setCourses } =
  coursesSlice.actions;
 export default coursesSlice.reducer;
+

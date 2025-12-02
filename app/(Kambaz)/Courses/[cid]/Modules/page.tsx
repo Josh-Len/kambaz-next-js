@@ -1,12 +1,8 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { FormControl } from "react-bootstrap";
-import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { useParams } from "next/navigation";
-import * as db from "../../../Database";
 
 import ListGroup from "react-bootstrap/ListGroup";
 import { BsGripVertical } from "react-icons/bs";
@@ -17,26 +13,16 @@ import LessonControlButtons from "./LessonControlButtons";
 type Lesson = { _id?: string; name: string };
 type Module = { _id?: string; name: string; course: string; lessons?: Lesson[]; editing?: boolean; };
 
+import { addModule, editModule, updateModule, deleteModule }
+  from "./reducer";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../../store";
+
 export default function Modules() {
-  const { cid } = useParams<{ cid: string }>();
-  const [modules, setModules] = useState<any[]>(db.modules);
+  const { cid } = useParams();
   const [moduleName, setModuleName] = useState("");
-  const addModule = () => {
-    setModules([ ...modules, { _id: uuidv4(), name: moduleName, course: cid, lessons: [] } ]);
-    setModuleName("");
-  };
-  const deleteModule = (moduleId: string) => {
-    setModules(modules.filter((m) => m._id !== moduleId));
-  };
-  const editModule = (moduleId: string) => {
-    setModules(modules.map((m) => (m._id === moduleId ? { ...m, editing: true } : m)));
-  };
-  const updateModule = (module: any) => {
-    setModules(modules.map((m) => (m._id === module._id ? module : m)));
-  };
-
-
-
+  const { modules } = useSelector((state: RootState) => state.modulesReducer);
+  const dispatch = useDispatch();
   return (
     <div>
       <button>Collapse All</button>
@@ -46,7 +32,11 @@ export default function Modules() {
       </select>
       <button>+ Module</button>
 
-      <ModulesControls setModuleName={setModuleName} moduleName={moduleName} addModule={addModule} />
+      <ModulesControls moduleName={moduleName} setModuleName={setModuleName}
+        addModule={() => {
+          dispatch(addModule({ name: moduleName, course: cid }));
+          setModuleName("");
+        }} />
       <br />
       <br />
       <br />
@@ -64,10 +54,11 @@ export default function Modules() {
                 {!module.editing && module.name}
                 { module.editing && (
                 <FormControl className="w-50 d-inline-block"
-               onChange={(e) => updateModule({ ...module, name: e.target.value })}
+               onChange={(e) => dispatch(updateModule({ ...module, name: e.target.value }))}
                onKeyDown={(e) => {
                  if (e.key === "Enter") {
-                   updateModule({ ...module, editing: false });
+                  dispatch(
+                   updateModule({ ...module, editing: false }));
                  }
                }}
                defaultValue={module.name}/>
@@ -75,8 +66,10 @@ export default function Modules() {
  
                 <ModuleControlButtons
                   moduleId={String(module._id)}
-                  deleteModule={deleteModule}
-                  editModule={editModule}/>
+                  deleteModule={(moduleId) => {
+                    dispatch(deleteModule(moduleId));
+                  }}
+                  editModule={(moduleId) => dispatch(editModule(moduleId))}/>
               </div>
 
               {module.lessons && (
