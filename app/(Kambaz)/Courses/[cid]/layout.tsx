@@ -6,11 +6,21 @@ import { useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { RootState } from "../../store";
 
+type Course = {
+  _id: string;
+  name: string;
+  // number?: string;
+  // description?: string;
+};
+
 export default function CoursesLayout({ children }: { children: ReactNode }) {
-  const { cid } = useParams();
-  const { courses } = useSelector((state: RootState) => state.coursesReducer);
-  // eslint-disable-next-line
-  const course = courses.find((course: any) => course._id === cid);
+  const { cid } = useParams<{ cid: string }>();
+
+  const courses = useSelector<RootState, Course[]>(
+    (state) => state.coursesReducer.courses
+  );
+
+  const course = courses.find((course) => course._id === cid);
 
   const [showNav, setShowNav] = useState(true);
 
@@ -20,7 +30,7 @@ export default function CoursesLayout({ children }: { children: ReactNode }) {
         <button
           type="button"
           className="btn btn-link p-0 me-4 mb-1 align-middle"
-          onClick={() => setShowNav(prev => !prev)}
+          onClick={() => setShowNav((prev) => !prev)}
         >
           <FaAlignJustify className="fs-4" />
         </button>
