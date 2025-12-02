@@ -1,12 +1,11 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { FaUserCircle } from "react-icons/fa";
 import { useParams } from "next/navigation";
-import db from "../../../../Database";
+import * as client from "../../../client"; // ⬅️ path from Courses/[cid]/People/Table/page.tsx
 
-// Tiny local types (replace with real ones from your DB if available)
-type Enrollment = { user: string; course: string };
 type User = {
   _id: string;
   firstName: string;
@@ -20,13 +19,22 @@ type User = {
 
 export default function PeopleTable() {
   const { cid } = useParams<{ cid: string }>();
+  const [enrolledUsers, setEnrolledUsers] = useState<User[]>([]);
 
-  const users = db.users as User[];
-  const enrollments = db.enrollments as Enrollment[];
+  useEffect(() => {
+    if (!cid) return;
 
-  const enrolledUsers: User[] = users.filter((usr) =>
-    enrollments.some((enr) => enr.user === usr._id && enr.course === cid)
-  );
+    const load = async () => {
+      try {
+        const users = await client.findPeopleForCourse(cid);
+        setEnrolledUsers(users);
+      } catch (e) {
+        console.error("Failed to load people for course", e);
+      }
+    };
+
+    load();
+  }, [cid]);
 
   return (
     <div id="wd-people-table">

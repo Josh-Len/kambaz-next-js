@@ -94,3 +94,10 @@ export const unenrollUserFromCourse = async (courseId: string) => {
   );
   return response.data;
 };
+
+export const findPeopleForCourse = async (courseId: string) => {
+  const { data } = await axiosWithCredentials.get(
+    `${COURSES_API}/${courseId}/people`
+  );
+  return data;
+};

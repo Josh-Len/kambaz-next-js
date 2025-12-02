@@ -32,8 +32,8 @@ export default function AssignmentEditor() {
 
   const isNew = aid === "new";
 
-  const { assignments } = useSelector(
-    (state: RootState) => state.assignmentsReducer
+  const assignments = useSelector<RootState, Assignment[]>(
+    (state) => state.assignmentsReducer.assignments
   );
 
   const existing = assignments.find(

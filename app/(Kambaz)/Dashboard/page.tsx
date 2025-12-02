@@ -64,7 +64,7 @@ export default function Dashboard() {
       dispatch(enrollInCourse({ user: userId, course: courseId }));
 
       const enrolledCourse = courses.find((c: any) => c._id === courseId);
-      if (enrolledCourse && !myCourses.some((c) => c._id === courseId)) {
+      if (enrolledCourse && !myCourses.some((c: any) => c._id === courseId)) {
         setMyCourses([...myCourses, enrolledCourse]);
       }
     } catch (e) {
@@ -72,22 +72,20 @@ export default function Dashboard() {
     }
   };
 
-const onUnenrollUserFromCourse = async (courseId: string) => {
-  if (!currentUser) return;
+  const onUnenrollUserFromCourse = async (courseId: string) => {
+    if (!currentUser) return;
 
-  try {
-    await client.unenrollUserFromCourse(courseId);
+    try {
+      await client.unenrollUserFromCourse(courseId);
 
-    const userId = (currentUser as any)._id;
-    dispatch(unenrollFromCourse({ user: userId, course: courseId }));
+      const userId = (currentUser as any)._id;
+      dispatch(unenrollFromCourse({ user: userId, course: courseId }));
 
-    setMyCourses(myCourses.filter((c) => c._id !== courseId));
-  } catch (e) {
-    console.error("Failed to unenroll from course", e);
-  }
-};
-
-
+      setMyCourses(myCourses.filter((c: any) => c._id !== courseId));
+    } catch (e) {
+      console.error("Failed to unenroll from course", e);
+    }
+  };
 
   const onAddNewCourse = async () => {
     if (!currentUser) return;
@@ -100,8 +98,8 @@ const onUnenrollUserFromCourse = async (courseId: string) => {
   const onDeleteCourse = async (courseId: string) => {
     try {
       await client.deleteCourse(courseId);
-      dispatch(setCourses(courses.filter((c) => c._id !== courseId)));
-      setMyCourses(myCourses.filter((c) => c._id !== courseId));
+      dispatch(setCourses(courses.filter((c: any) => c._id !== courseId)));
+      setMyCourses(myCourses.filter((c: any) => c._id !== courseId));
     } catch (e) {
       console.error("Failed to delete course", e);
     }
@@ -109,13 +107,13 @@ const onUnenrollUserFromCourse = async (courseId: string) => {
 
   const onUpdateCourse = async () => {
     await client.updateCourse(course);
-    const updatedCourses = courses.map((c) =>
+    const updatedCourses = courses.map((c: any) =>
       c._id === course._id ? course : c
     );
     dispatch(setCourses(updatedCourses));
 
     setMyCourses(
-      myCourses.map((c) => (c._id === course._id ? course : c))
+      myCourses.map((c: any) => (c._id === course._id ? course : c))
     );
   };
 
@@ -139,9 +137,9 @@ const onUnenrollUserFromCourse = async (courseId: string) => {
     onEnrollUserInCourse(courseId);
   };
 
-const handleUnenroll = (courseId: string) => {
-  onUnenrollUserFromCourse(courseId);
-};
+  const handleUnenroll = (courseId: string) => {
+    onUnenrollUserFromCourse(courseId);
+  };
 
   return (
     <div id="wd-dashboard">
@@ -265,7 +263,6 @@ const handleUnenroll = (courseId: string) => {
                       {c.description}
                     </Card.Text>
 
-                    {/* Go button only works if enrolled */}
                     {isEnrolled ? (
                       <Link href={`/Courses/${c._id}/Home`} className="me-2">
                         <Button variant="primary" type="button">
@@ -283,7 +280,6 @@ const handleUnenroll = (courseId: string) => {
                       </Button>
                     )}
 
-                    {/* Enroll / Unenroll buttons */}
                     {isEnrolled ? (
                       <button
                         className="btn btn-danger float-end"
@@ -319,7 +315,7 @@ const handleUnenroll = (courseId: string) => {
                           Edit
                         </button>
 
-                        <button
+                          <button
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();

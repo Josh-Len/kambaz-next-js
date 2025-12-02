@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import db from "../Database";
 
 export type Enrollment = {
   _id: string;
@@ -9,11 +8,11 @@ export type Enrollment = {
 };
 
 type EnrollmentsState = {
-  enrollments: Enrollment[];
+  enrollments: any[];
 };
 
 const initialState: EnrollmentsState = {
-  enrollments: db.enrollments as any,
+  enrollments: [],
 };
 
 const enrollmentsSlice = createSlice({
