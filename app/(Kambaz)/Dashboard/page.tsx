@@ -25,6 +25,9 @@ export default function Dashboard() {
 
   const [myCourses, setMyCourses] = useState<any[]>([]);
 
+    console.log("DASHBOARD courses:", courses);
+  console.log("DASHBOARD myCourses:", myCourses);
+
   const [course, setCourse] = useState<any>({
     _id: "0",
     name: "New Course",
