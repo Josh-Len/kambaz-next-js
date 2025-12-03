@@ -1,12 +1,13 @@
 "use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { FaUserCircle } from "react-icons/fa";
-import { useParams } from "next/navigation";
-import * as client from "../../../client"; // ⬅️ path from Courses/[cid]/People/Table/page.tsx
+import * as client from "../../../Account/client";
+import PeopleDetails from "./Details";
+import Link from "next/link";
 
-type User = {
+export type User = {
   _id: string;
   firstName: string;
   lastName: string;
@@ -17,27 +18,27 @@ type User = {
   totalActivity: string;
 };
 
-export default function PeopleTable() {
-  const { cid } = useParams<{ cid: string }>();
-  const [enrolledUsers, setEnrolledUsers] = useState<User[]>([]);
+type PeopleTableProps = {
+  // Users to display, already fetched (and already filtered by course on the server)
+  users?: User[];
+  // Optional callback the parent can pass in to (re)fetch users
+  fetchUsers?: () => void;
+};
 
-  useEffect(() => {
-    if (!cid) return;
-
-    const load = async () => {
-      try {
-        const users = await client.findPeopleForCourse(cid);
-        setEnrolledUsers(users);
-      } catch (e) {
-        console.error("Failed to load people for course", e);
-      }
-    };
-
-    load();
-  }, [cid]);
+export default function PeopleTable( { users = [], fetchUsers }: { users?: any[]; fetchUsers: () => void; }) {
+    const [showDetails, setShowDetails] = useState(false);
+  const [showUserId, setShowUserId] = useState<string | null>(null);
 
   return (
     <div id="wd-people-table">
+      {showDetails && (
+       <PeopleDetails
+         uid={showUserId}
+         onClose={() => {
+           setShowDetails(false);
+           fetchUsers();
+         }}/>
+     )}
       <Table striped>
         <thead>
           <tr>
@@ -50,12 +51,18 @@ export default function PeopleTable() {
           </tr>
         </thead>
         <tbody>
-          {enrolledUsers.map((user) => (
+          {users.map((user) => (
             <tr key={user._id}>
               <td className="wd-full-name text-nowrap">
+                <span className="text-decoration-none"
+                 onClick={() => {
+                   setShowDetails(true);
+                   setShowUserId(user._id);
+                 }} >
                 <FaUserCircle className="me-2 fs-1 text-secondary" />
                 <span className="wd-first-name">{user.firstName}</span>
                 <span className="wd-last-name"> {user.lastName}</span>
+                </span>
               </td>
               <td className="wd-login-id">{user.loginId}</td>
               <td className="wd-section">{user.section}</td>
