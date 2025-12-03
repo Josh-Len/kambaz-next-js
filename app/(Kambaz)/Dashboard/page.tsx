@@ -6,9 +6,6 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Card, Button, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addNewCourse,
-  deleteCourse,
-  updateCourse,
   setCourses,
 } from "../Courses/[cid]/reducer";
 import { RootState } from "../store";
@@ -58,9 +55,9 @@ export default function Dashboard() {
     if (!currentUser) return;
 
     try {
-      await client.enrollUserInCourse(courseId);
-
       const userId = (currentUser as any)._id;
+      await client.enrollIntoCourse(userId, courseId);
+
       dispatch(enrollInCourse({ user: userId, course: courseId }));
 
       const enrolledCourse = courses.find((c: any) => c._id === courseId);
@@ -76,9 +73,9 @@ export default function Dashboard() {
     if (!currentUser) return;
 
     try {
-      await client.unenrollUserFromCourse(courseId);
-
       const userId = (currentUser as any)._id;
+      await client.unenrollFromCourse(userId, courseId);
+
       dispatch(unenrollFromCourse({ user: userId, course: courseId }));
 
       setMyCourses(myCourses.filter((c: any) => c._id !== courseId));
@@ -89,10 +86,14 @@ export default function Dashboard() {
 
   const onAddNewCourse = async () => {
     if (!currentUser) return;
+
     const newCourse = await client.createCourse(course);
+    // Server auto-enrolls creator, so:
     dispatch(setCourses([...courses, newCourse]));
 
-    await onEnrollUserInCourse(newCourse._id);
+    // Either refetch my courses, or optimistically add:
+    const enrolledCourses = await client.findMyCourses();
+    setMyCourses(enrolledCourses);
   };
 
   const onDeleteCourse = async (courseId: string) => {
@@ -123,7 +124,6 @@ export default function Dashboard() {
     return <div>Please sign in to view your dashboard.</div>;
   }
 
-  const userId = (currentUser as any)._id;
   const role = (currentUser as any).role;
   const isFaculty = role === "FACULTY";
 
@@ -157,7 +157,7 @@ export default function Dashboard() {
 
       <hr />
 
-      {/*isFaculty*/ true && (
+      {isFaculty && (
         <>
           <h5>
             New Course
@@ -300,7 +300,7 @@ export default function Dashboard() {
                       </button>
                     )}
 
-                    {/*isFaculty*/ true && (
+                    {isFaculty && (
                       <>
                         <button
                           id="wd-edit-course-click"
@@ -315,7 +315,7 @@ export default function Dashboard() {
                           Edit
                         </button>
 
-                          <button
+                        <button
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
