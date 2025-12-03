@@ -130,11 +130,14 @@ export default function Dashboard() {
   const role = (currentUser as any).role;
   const isFaculty = role === "FACULTY";
 
-  const enrolledCourseIds = new Set(myCourses.map((c: any) => c._id));
+  const safeMyCourses = myCourses.filter((c: any) => c && c._id);
+const safeCourses = courses.filter((c: any) => c && c._id);
 
-  const visibleCourses = showAllCourses
-    ? courses
-    : courses.filter((c: any) => enrolledCourseIds.has(c._id));
+const enrolledCourseIds = new Set(safeMyCourses.map((c: any) => c._id));
+
+const visibleCourses = showAllCourses
+  ? safeCourses
+  : safeCourses.filter((c: any) => enrolledCourseIds.has(c._id));
 
   const handleEnroll = (courseId: string) => {
     onEnrollUserInCourse(courseId);
