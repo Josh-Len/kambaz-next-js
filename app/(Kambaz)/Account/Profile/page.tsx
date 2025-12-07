@@ -11,13 +11,14 @@ import * as client from "../client";
 export default function Profile() {
  const [profile, setProfile] = useState<any>({});
  const dispatch = useDispatch();
- const { currentUser } = useSelector((state: RootState) => state.accountReducer);
+ const { currentUser, authReady } = useSelector((state: RootState) => state.accountReducer);
  const updateProfile = async () => {
     const updatedProfile = await client.updateUser(profile);
     dispatch(setCurrentUser(updatedProfile));
   };
 
  const fetchProfile = () => {
+   if (!authReady) return; // Wait for auth to be ready
    if (!currentUser) return redirect("/Account/Signin");
    setProfile(currentUser);
  };
@@ -28,7 +29,7 @@ export default function Profile() {
  };
  useEffect(() => {
    fetchProfile();
- }, []);
+ }, [authReady, currentUser]);
  return (
    <div className="wd-profile-screen">
      <h3>Profile</h3>

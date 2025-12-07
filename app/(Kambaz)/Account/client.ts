@@ -1,7 +1,29 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
+
+// Generate or retrieve tab-specific identifier
+const getTabId = (): string => {
+  if (typeof window === "undefined") return "";
+  let tabId = sessionStorage.getItem("kambaz-tab-id");
+  if (!tabId) {
+    tabId = `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    sessionStorage.setItem("kambaz-tab-id", tabId);
+  }
+  return tabId;
+};
+
 const axiosWithCredentials = axios.create({ withCredentials: true });
+
+// Add tab identifier to all requests
+axiosWithCredentials.interceptors.request.use((config) => {
+  const tabId = getTabId();
+  if (tabId) {
+    config.headers["X-Tab-Id"] = tabId;
+  }
+  return config;
+});
+
 export const HTTP_SERVER = process.env.NEXT_PUBLIC_HTTP_SERVER;
 export const USERS_API = `${HTTP_SERVER}/api/users`;
 export const findAllUsers = async () => {

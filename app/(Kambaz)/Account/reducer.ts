@@ -10,10 +10,12 @@ export type AccountUser = {
 
 export type AccountState = {
   currentUser: AccountUser | null;
+  authReady: boolean;
 };
 
 const initialState: AccountState = {
   currentUser: null,
+  authReady: false,
 };
 
 const accountSlice = createSlice({
@@ -23,8 +25,11 @@ const accountSlice = createSlice({
     setCurrentUser: (state, action: PayloadAction<AccountUser | null>) => {
       state.currentUser = action.payload;
     },
+    setAuthReady: (state, action: PayloadAction<boolean>) => {
+      state.authReady = action.payload;
+    },
   },
 });
 
-export const { setCurrentUser } = accountSlice.actions;
+export const { setCurrentUser, setAuthReady } = accountSlice.actions;
 export default accountSlice.reducer;

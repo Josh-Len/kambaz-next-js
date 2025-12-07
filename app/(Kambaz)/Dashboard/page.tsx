@@ -16,7 +16,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
 
   const { courses } = useSelector((state: RootState) => state.coursesReducer);
-  const { currentUser } = useSelector(
+  const { currentUser, authReady } = useSelector(
     (state: RootState) => state.accountReducer
   );
   const { enrollments } = useSelector(
@@ -122,6 +122,10 @@ export default function Dashboard() {
   };
 
   const [showAllCourses, setShowAllCourses] = useState<boolean>(false);
+
+  if (!authReady) {
+    return <div>Loading...</div>;
+  }
 
   if (!currentUser) {
     return <div>Please sign in to view your dashboard.</div>;
