@@ -71,7 +71,6 @@ export default function QuizzesScreen() {
     <div className="p-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Quizzes</h2>
-        {/* Show this only for faculty in real app */}
         <Button onClick={addQuiz}>+ Quiz</Button>
       </div>
 
