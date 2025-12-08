@@ -27,6 +27,7 @@ function formatAvailability(quiz: any): string {
   return "Available";
 }
 
+
 export default function QuizzesScreen() {
   const params = useParams();
   const router = useRouter();
@@ -34,6 +35,11 @@ export default function QuizzesScreen() {
 
   const [quizzes, setQuizzes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+    const currentUser = useSelector(
+    (state: any) => state.accountReducer?.currentUser
+  );
+  const isFaculty = currentUser?.role === "FACULTY";
 
   const fetchQuizzes = async () => {
     setLoading(true);
@@ -71,7 +77,8 @@ export default function QuizzesScreen() {
     <div className="p-3">
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h2>Quizzes</h2>
-        <Button onClick={addQuiz}>+ Quiz</Button>
+        {isFaculty &&
+        <Button onClick={addQuiz}>+ Quiz</Button>}
       </div>
 
       {loading && <div>Loading...</div>}
